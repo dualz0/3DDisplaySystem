@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class FurnitureMove : MonoBehaviour
 {
-    private bool isSelected = true;
+    [SerializeField] private bool isSelected = true;
+    public bool IsSelected
+    {
+        get { return isSelected; }
+        set { isSelected = value; }
+    }
 
     private float moveSpeed = 10.0f;
     private float rotateSpeed = 100.0f;
 
     private Vector3 moveVector = Vector3.zero;
-
-    void Start()
-    {
-
-    }
 
     void Update()
     {

@@ -3,6 +3,8 @@ using UnityEngine.UI;
 public class LoadBuildScene : MonoBehaviour
 {
     public Transform furnitureTransform;
+    private int iCount = -1;
+
     void Start()
     {
         LoadButtons();
@@ -31,8 +33,15 @@ public class LoadBuildScene : MonoBehaviour
 
     private void OnClick(int i)
     {
+        if (iCount >= 0)
+        {
+            furnitureTransform.GetChild(iCount).transform.GetComponent<FurnitureMove>().IsSelected = false;
+        }
+
         Object furniturePrefab = Resources.Load(MyConst.RESOURCES_FURNITURES_PATH[i]) as GameObject;
         GameObject go = Instantiate(furniturePrefab, furnitureTransform) as GameObject;
         go.AddComponent<FurnitureMove>();
+
+        iCount++;
     }
 }
