@@ -27,6 +27,9 @@ public class FurnitureMove : MonoBehaviour
 
             moveVector.Set(translationX, 0, translationZ);
 
+            //以本地坐标系移动
+            //transform.localPosition += moveVector;
+
             // 以世界坐标系移动
             transform.position += moveVector;
             #endregion

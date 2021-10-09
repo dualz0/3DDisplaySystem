@@ -11,7 +11,7 @@ public class MyConst : MonoBehaviour
         "椅子",
         "桌子", 
         "门", 
-        "窗",
+        "墙",
     };
 
     public static readonly string[] RESOURCES_FURNITURES_PATH = new string[4]

@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 public class LoadBuildScene : MonoBehaviour
 {
+    public Transform furnitureTransform;
     void Start()
     {
         LoadButtons();
@@ -31,7 +32,7 @@ public class LoadBuildScene : MonoBehaviour
     private void OnClick(int i)
     {
         Object furniturePrefab = Resources.Load(MyConst.RESOURCES_FURNITURES_PATH[i]) as GameObject;
-        GameObject go = Instantiate(furniturePrefab) as GameObject;
+        GameObject go = Instantiate(furniturePrefab, furnitureTransform) as GameObject;
         go.AddComponent<FurnitureMove>();
     }
 }
