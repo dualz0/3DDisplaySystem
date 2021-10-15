@@ -46,7 +46,7 @@ public class PlayButton : MonoBehaviour
 
     private void OnClick()
     {
-        if (_pointCount > 0)
+        if (_pointCount > 1)
         {
             // 进入播放阶段
             line.SetActive(false);
@@ -54,7 +54,7 @@ public class PlayButton : MonoBehaviour
             int count = cameraPoints.childCount;
             for (int i = 0; i < count; ++i)
             {
-                cameraPoints.GetChild(i).transform.localPosition += Vector3.down;
+                cameraPoints.GetChild(i).transform.localPosition += Vector3.down * 10;
             }
 
             Camera.main.orthographic = false;
