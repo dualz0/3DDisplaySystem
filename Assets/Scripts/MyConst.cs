@@ -5,6 +5,8 @@ using UnityEngine;
 public class MyConst : MonoBehaviour
 {
     public const string RESOURCES_BUTTON_PATH = "Prefabs/ButtonFurniturePrefab";
+    public const string RESOURCES_BUTTON_PLAY_PATH = "Prefabs/ButtonPlayPrefab";
+    public const string RESOURCES_CAMERA_POINT_PREFAB_PATH = "Prefabs/CameraPointPrefab";
 
     public static readonly string[] BUTTON_TEXT = new string[4]
     { 

@@ -24,12 +24,22 @@ public class FurnitureMove : MonoBehaviour
             #region
             float translationZ = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
             float translationX = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+            
+            if (transform.position.x <= -9 && translationX < 0) 
+                translationX = 0;
+            else if (transform.position.x >= 9 && translationX > 0)
+                translationX = 0;
+            
+            if (transform.position.z <= -4 && translationZ < 0)
+                translationZ = 0;
+            else if (transform.position.z >= 4 && translationZ > 0)
+                translationZ = 0;
 
             moveVector.Set(translationX, 0, translationZ);
-
+            
             //以本地坐标系移动
             //transform.localPosition += moveVector;
-
+            
             // 以世界坐标系移动
             transform.position += moveVector;
             #endregion
@@ -58,10 +68,12 @@ public class FurnitureMove : MonoBehaviour
                 isSelected = false;
             }
 
-            // 按下 Esc 键或 BackSpace 键或 Delete 键销毁当前物体
+            // 按下 Esc 键或 BackSpace 键或 Delete 键删除该家具
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
             {
-                GameObject.Destroy(gameObject);
+                // 由于会引起 child count 的变化，此处直接隐藏 Game Object
+                // GameObject.Destroy(gameObject);
+                gameObject.SetActive(false);
             }
 
         }
