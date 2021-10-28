@@ -1,47 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FurnitureMove : MonoBehaviour
 {
-    [SerializeField] private bool isSelected = true;
+    private const float _moveSpeed = 10.0f;
+    private const float _rotateSpeed = 100.0f;
+
+    private const float _leftLimit = -9f;
+    private const float _rightLimit = 9f;
+    private const float _topLimit = 4f;
+    private const float _bottonLimit = -4f;
+
+    private Vector3 _moveVector = Vector3.zero;
+
+    private bool _isSelected = true;
     public bool IsSelected
     {
-        get { return isSelected; }
-        set { isSelected = value; }
+        get { return _isSelected; }
+        set { _isSelected = value; }
     }
-
-    private float moveSpeed = 10.0f;
-    private float rotateSpeed = 100.0f;
-
-    private Vector3 moveVector = Vector3.zero;
-
+    
     void Update()
     {
-        if (isSelected)
+        if (_isSelected)
         {
             // WASD控制上下左右移动
             #region
-            float translationZ = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
-            float translationX = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+            float translationZ = Input.GetAxis("Vertical") * _moveSpeed * Time.deltaTime;
+            float translationX = Input.GetAxis("Horizontal") * _moveSpeed * Time.deltaTime;
             
-            if (transform.position.x <= -9 && translationX < 0) 
+            // 到达边界则不改变位置
+            if ((transform.position.x <= _leftLimit && translationX < 0) || 
+                (transform.position.x >= _rightLimit && translationX > 0))
+            {
                 translationX = 0;
-            else if (transform.position.x >= 9 && translationX > 0)
-                translationX = 0;
-            
-            if (transform.position.z <= -4 && translationZ < 0)
-                translationZ = 0;
-            else if (transform.position.z >= 4 && translationZ > 0)
-                translationZ = 0;
+            }
 
-            moveVector.Set(translationX, 0, translationZ);
+            if ((transform.position.z <= _bottonLimit && translationZ < 0) ||
+                (transform.position.z >= _topLimit && translationZ > 0))
+            {
+                translationZ = 0;
+            }
+
+            _moveVector.Set(translationX, 0, translationZ);
             
-            //以本地坐标系移动
-            //transform.localPosition += moveVector;
-            
-            // 以世界坐标系移动
-            transform.position += moveVector;
+            transform.position += _moveVector;
             #endregion
 
             // QE控制左右旋转
@@ -51,12 +53,12 @@ public class FurnitureMove : MonoBehaviour
             if (Input.GetKey(KeyCode.Q))
             {
                 // 向左旋转
-                rotation -= rotateSpeed * Time.deltaTime;
+                rotation -= _rotateSpeed * Time.deltaTime;
             }
             else if (Input.GetKey(KeyCode.E))
             {
                 // 向右旋转
-                rotation += rotateSpeed * Time.deltaTime;
+                rotation += _rotateSpeed * Time.deltaTime;
             }
 
             transform.Rotate(0, rotation, 0);
@@ -65,14 +67,12 @@ public class FurnitureMove : MonoBehaviour
             // 按下回车键或 J 键后不再控制当前物体
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.J))
             {
-                isSelected = false;
+                _isSelected = false;
             }
 
-            // 按下 Esc 键或 BackSpace 键或 Delete 键删除该家具
+            // 按下 Esc 键或 BackSpace 键或 Delete 键不再显示该家具
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
             {
-                // 由于会引起 child count 的变化，此处直接隐藏 Game Object
-                // GameObject.Destroy(gameObject);
                 gameObject.SetActive(false);
             }
 

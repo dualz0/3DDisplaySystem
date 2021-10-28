@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 public class BuildOkButton : MonoBehaviour
 {
     public Transform furnitureTransform;
+    
     public Transform canvas;
 
-    [SerializeField] private Vector3 cameraPos = Vector3.zero;
+    private Vector3 _cameraPos = Vector3.zero;
 
     void Start()
     {
         transform.GetComponent<Button>().onClick.AddListener(OnClick);
-        cameraPos.Set(0, 100, 0);
+        _cameraPos.Set(0, 100, 0);
     }
     private void OnClick()
     {
@@ -28,11 +26,10 @@ public class BuildOkButton : MonoBehaviour
         GameObject go = Instantiate(buttonPrefab, canvas) as GameObject;
         
         // 调整摄像头位置
-        Camera.main.transform.position = cameraPos;
+        Camera.main.transform.position = _cameraPos;
         Camera.main.transform.LookAt(Vector3.zero);
 
         canvas.GetChild(0).gameObject.SetActive(false);
         gameObject.SetActive(false);
     }
-
 }

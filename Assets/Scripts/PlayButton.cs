@@ -1,24 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayButton : MonoBehaviour
 {
-    private LayerMask _layerMask = 1 << 8;   // 打开第 5, 8 层
-    public GameObject line;
-    [SerializeField] private int _pointCount = 0;
-    private bool isDraw = true;
     public Transform cameraPoints;
+ 
+    private LayerMask _layerMask = 1 << 8;   // 打开第 8 层
+    
+    private GameObject _line;
+    
+    private int _pointCount = 0;
+    
+    private bool _isDraw = true;
+    
+    private const float _rightLimit = 10f;
+    private const float _leftLimit = -10f;
+    private const float _topLimit = 5f;
+    private const float _bottomLimit = -5f;
+
+    private const float _cameraDistance = 1000f;
+    
+    private const float _downUnit = 10f;
+    
+    private const float _cameraFieldOfView = 60f;
     
     void Start()
     {
-        gameObject.GetComponent<Button>().onClick.AddListener(OnClick);
-        
-        line = GameObject.FindGameObjectWithTag("Line");
-
+        _line = GameObject.FindGameObjectWithTag("Line");
         cameraPoints = GameObject.Find("----- CameraPoints ------").transform;
+        
+        gameObject.GetComponent<Button>().onClick.AddListener(OnClick);
     }
 
     void Update()
@@ -26,10 +37,11 @@ public class PlayButton : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;//碰撞点
-            if (Physics.Raycast(ray, out hit, 1000, _layerMask))
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, _cameraDistance, _layerMask))
             {
-                if (hit.point.x >= 10 || hit.point.x <= -10 || hit.point.z >= 5 || hit.point.z <= -5)
+                if (hit.point.x >= _rightLimit || hit.point.x <= _leftLimit || 
+                    hit.point.z >= _topLimit || hit.point.z <= _bottomLimit)
                     return;
                 
                 Object buttonPrefab = Resources.Load(MyConst.RESOURCES_CAMERA_POINT_PREFAB_PATH) as GameObject;
@@ -38,8 +50,8 @@ public class PlayButton : MonoBehaviour
                 go.GetComponent<Renderer>().material.color = Color.red;
 
                 // 画线
-                line.GetComponent<LineRenderer>().positionCount = _pointCount + 1;
-                line.GetComponent<LineRenderer>().SetPosition(_pointCount++, go.transform.position);
+                _line.GetComponent<LineRenderer>().positionCount = _pointCount + 1;
+                _line.GetComponent<LineRenderer>().SetPosition(_pointCount++, go.transform.position);
             }
         }    
     }
@@ -49,16 +61,16 @@ public class PlayButton : MonoBehaviour
         if (_pointCount > 1)
         {
             // 进入播放阶段
-            line.SetActive(false);
+            _line.SetActive(false);
 
             int count = cameraPoints.childCount;
             for (int i = 0; i < count; ++i)
             {
-                cameraPoints.GetChild(i).transform.localPosition += Vector3.down * 10;
+                cameraPoints.GetChild(i).transform.localPosition += Vector3.down * _downUnit;
             }
 
             Camera.main.orthographic = false;
-            Camera.main.fieldOfView = 60;
+            Camera.main.fieldOfView = _cameraFieldOfView;
             Camera.main.GetComponent<CameraController>().IsMove = true;
             Camera.main.GetComponent<CameraController>().MoveInit();
                 

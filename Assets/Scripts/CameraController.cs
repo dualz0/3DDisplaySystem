@@ -1,37 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using UnityEditor.Rendering;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     public Transform cameraPoints;
-    [SerializeField] public float speed = 3.0F;
+    
+    private const float _speed = 3.0F;
 
-    private int index = 0;
+    private int _index = 0;
 
-    private bool isMove = false;
+    private bool _isMove = false;
     public bool IsMove
     {
-        get { return isMove; }
-        set { isMove = value; }
+        get { return _isMove; }
+        set { _isMove = value; }
     }
 
-    private bool isWalking = false;
-    private bool isRotating = false;
+    private bool _isWalking = false;
+    private bool _isRotating = false;
     
-    private Vector3 velocity = Vector3.zero;
-    private Vector3 curPos = Vector3.zero;
-    private int count = 0;
+    private Vector3 _curPos = Vector3.zero;
+    private int _count = 0;
+    private const float _posY = 1f;
 
     private Quaternion _curRotation;
     private Quaternion _tarRotation;
+    private const float _rotateSpeedUnit = 100f;
     private float _rotateSpeed = 0.0f;
     private float _lerpTime = 0.0f;
+    private float _deltaTime = 0.01f;
     
     void Start()
     {
@@ -43,11 +39,11 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (isMove && isWalking)
+        if (_isMove && _isWalking)
         {
             Move();
         }
-        if (isRotating)
+        if (_isRotating)
         {
             Rotate();
         }
@@ -55,65 +51,63 @@ public class CameraController : MonoBehaviour
 
     public void MoveInit()
     {
-        count = cameraPoints.childCount;
+        _count = cameraPoints.childCount;
 
-        curPos.Set(cameraPoints.GetChild(index).position.x, 1, cameraPoints.GetChild(index).position.z);
-        ++index;
+        _curPos.Set(cameraPoints.GetChild(_index).position.x, _posY, cameraPoints.GetChild(_index).position.z);
+        ++_index;
         
-        transform.position = curPos;
-        curPos.Set(cameraPoints.GetChild(index).position.x, 1, cameraPoints.GetChild(index).position.z);
-        transform.LookAt(curPos);
+        transform.position = _curPos;
+        _curPos.Set(cameraPoints.GetChild(_index).position.x, _posY, cameraPoints.GetChild(_index).position.z);
+        transform.LookAt(_curPos);
         
-        isWalking = true;
+        _isWalking = true;
 
-        index++;
+        _index++;
     }
 
 
     public void Move()
     {
-        if (index <= count - 1)
+        if (_index <= _count - 1)
         {
-            transform.position = Vector3.MoveTowards(transform.position, curPos, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, _curPos, _speed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, curPos) < 0.01f)
+            if (Vector3.Distance(transform.position, _curPos) < _deltaTime)
             {
-                transform.position = curPos;
-                curPos.Set(cameraPoints.GetChild(index).position.x, 1, cameraPoints.GetChild(index).position.z);
-    
-                // TODO: 设置平滑旋转
-                isWalking = false;
-                isRotating = true;
+                transform.position = _curPos;
+                _curPos.Set(cameraPoints.GetChild(_index).position.x, _posY, cameraPoints.GetChild(_index).position.z);
+                
+                _isWalking = false;
+                _isRotating = true;
                 
                 _curRotation = transform.rotation;
-                transform.LookAt(curPos);
+                transform.LookAt(_curPos);
                 _tarRotation = transform.rotation;
                 transform.rotation = _curRotation;
                 float rotateAngle = Quaternion.Angle(_curRotation, _tarRotation);
-                _rotateSpeed = 100 / rotateAngle;
-                _lerpTime = 0.0f;
+                _rotateSpeed = _rotateSpeedUnit / rotateAngle;
+                _lerpTime = 0f;
 
-                index++;
+                _index++;
             }
         }
-        else if (index == count)
+        else if (_index == _count)
         {
-            transform.position = Vector3.MoveTowards(transform.position, curPos, speed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, curPos) < 0.01f)
+            transform.position = Vector3.MoveTowards(transform.position, _curPos, _speed * Time.deltaTime);
+            if (Vector3.Distance(transform.position, _curPos) < _deltaTime)
             {
-                index++;
+                _index++;
             }
         }
     }
 
     private void Rotate()
     {
-        Debug.Log(_lerpTime);
         if (_lerpTime >= 1)
         {
             transform.rotation = _tarRotation;
             
-            isWalking = true;
+            _isWalking = true;
         }
 
         _lerpTime += Time.deltaTime * _rotateSpeed;
