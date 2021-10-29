@@ -62,7 +62,7 @@ public class CameraController : MonoBehaviour
         
         _isWalking = true;
 
-        _index++;
+        ++_index;
     }
 
 
@@ -88,7 +88,7 @@ public class CameraController : MonoBehaviour
                 _rotateSpeed = _rotateSpeedUnit / rotateAngle;
                 _lerpTime = 0f;
 
-                _index++;
+                ++_index;
             }
         }
         else if (_index == _count)
@@ -96,7 +96,7 @@ public class CameraController : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, _curPos, _speed * Time.deltaTime);
             if (Vector3.Distance(transform.position, _curPos) < _deltaTime)
             {
-                _index++;
+                ++_index;
             }
         }
     }

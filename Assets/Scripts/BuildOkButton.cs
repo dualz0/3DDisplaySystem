@@ -19,7 +19,7 @@ public class BuildOkButton : MonoBehaviour
     {
         int index = furnitureTransform.childCount; 
         if (index - 1 >= 0)
-            furnitureTransform.GetChild(index - 1).transform.GetComponent<FurnitureMove>().IsSelected = false;
+            furnitureTransform.GetChild(index - 1).transform.GetComponent<FurnitureController>().IsSelected = false;
 
         // 初始化播放按钮
         Object buttonPrefab = Resources.Load(MyConst.RESOURCES_BUTTON_PLAY_PATH) as GameObject;

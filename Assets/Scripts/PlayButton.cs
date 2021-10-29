@@ -8,21 +8,19 @@ public class PlayButton : MonoBehaviour
     private LayerMask _layerMask = 1 << 8;   // 打开第 8 层
     
     private GameObject _line;
-    
-    private int _pointCount = 0;
-    
-    private bool _isDraw = true;
-    
+
     private const float _rightLimit = 10f;
     private const float _leftLimit = -10f;
     private const float _topLimit = 5f;
     private const float _bottomLimit = -5f;
 
     private const float _cameraDistance = 1000f;
-    
     private const float _downUnit = 10f;
-    
     private const float _cameraFieldOfView = 60f;
+    
+    private int _pointCount = 0;
+    
+    private bool _isDraw = true;
     
     void Start()
     {
@@ -43,11 +41,11 @@ public class PlayButton : MonoBehaviour
                 if (hit.point.x >= _rightLimit || hit.point.x <= _leftLimit || 
                     hit.point.z >= _topLimit || hit.point.z <= _bottomLimit)
                     return;
-                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                 Object buttonPrefab = Resources.Load(MyConst.RESOURCES_CAMERA_POINT_PREFAB_PATH) as GameObject;
                 GameObject go = Instantiate(buttonPrefab, hit.point, transform.rotation) as GameObject;
                 go.transform.SetParent(cameraPoints);
-                go.GetComponent<Renderer>().material.color = Color.red;
+                go.GetComponent<Renderer>().material.color = Color.red;                                                                                                                                                                                                                                                            
 
                 // 画线
                 _line.GetComponent<LineRenderer>().positionCount = _pointCount + 1;
