@@ -59,19 +59,21 @@ public class PlayButton : MonoBehaviour
         if (_pointCount > 1)
         {
             // 进入播放阶段
+            // 隐藏线
             _line.SetActive(false);
 
             int count = cameraPoints.childCount;
             for (int i = 0; i < count; ++i)
             {
+                // 把小球隐藏到平面下
                 cameraPoints.GetChild(i).transform.localPosition += Vector3.down * _downUnit;
             }
-
+            
             Camera.main.orthographic = false;
             Camera.main.fieldOfView = _cameraFieldOfView;
             Camera.main.GetComponent<CameraController>().IsMove = true;
             Camera.main.GetComponent<CameraController>().MoveInit();
-                
+              
             gameObject.SetActive(false);
         }
     }

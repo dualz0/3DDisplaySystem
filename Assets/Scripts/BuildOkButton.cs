@@ -28,7 +28,8 @@ public class BuildOkButton : MonoBehaviour
         // 调整摄像头位置
         Camera.main.transform.position = _cameraPos;
         Camera.main.transform.LookAt(Vector3.zero);
-
+        
+        // 关闭家具按钮
         canvas.GetChild(0).gameObject.SetActive(false);
         gameObject.SetActive(false);
     }
